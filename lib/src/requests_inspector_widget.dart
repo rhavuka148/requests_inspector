@@ -61,7 +61,7 @@ class RequestsInspector extends StatelessWidget {
       widget = Directionality(
         textDirection: TextDirection.ltr,
         child: InkWell(
-          onTap: context.read<InspectorController>().showInspector,
+          onTap: () {},
           child: Banner(
             message: 'INSPECTOR',
             textDirection: TextDirection.ltr,
