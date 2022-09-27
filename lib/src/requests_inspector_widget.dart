@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,30 +38,18 @@ class RequestsInspector extends StatelessWidget {
               final inspectorController = context.read<InspectorController>();
               return Directionality(
                 textDirection: TextDirection.ltr,
-                child: !hideInspectorBanner && enabled
-                    ? Material(
-                        child: InkWell(
-                          onTap: inspectorController.showInspector,
-                          child: Banner(
-                            message: 'Inspector',
-                            textDirection: TextDirection.ltr,
-                            location: BannerLocation.topStart,
-                            child: WillPopScope(
-                              onWillPop: () async =>
-                                  inspectorController.pageController.page == 0,
-                              child: PageView(
-                                controller: inspectorController.pageController,
-                                physics: const NeverScrollableScrollPhysics(),
-                                children: [
-                                  _child,
-                                  const _Inspector(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    : _child,
+                child: WillPopScope(
+                  onWillPop: () async =>
+                      inspectorController.pageController.page == 0,
+                  child: PageView(
+                    controller: inspectorController.pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      _child,
+                      const _Inspector(),
+                    ],
+                  ),
+                ),
               );
             },
           )
