@@ -15,7 +15,7 @@ class RequestsInspector extends StatelessWidget {
     Key? key,
     this.enabled = false,
     this.hideInspectorBanner = false,
-    this.showInspectorOn = ShowInspectorOn.None,
+    this.showInspectorOn = ShowInspectorOn.Shaking,
     required Widget child,
   })  : _child = child,
         super(key: key);
@@ -38,38 +38,36 @@ class RequestsInspector extends StatelessWidget {
             ),
             builder: (context, _) {
               final inspectorController = context.read<InspectorController>();
-              return WillPopScope(
-                onWillPop: () async =>
-                    inspectorController.pageController.page == 0,
-                child: GestureDetector(
-                  onLongPress: inspectorController.showInspector,
-                  child: PageView(
-                    controller: inspectorController.pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      _child,
-                      const _Inspector(),
-                    ],
-                  ),
-                ),
+              return Directionality(
+                textDirection: TextDirection.ltr,
+                child: !hideInspectorBanner && enabled
+                    ? Material(
+                        child: InkWell(
+                          onTap: inspectorController.showInspector,
+                          child: Banner(
+                            message: 'Inspector',
+                            textDirection: TextDirection.ltr,
+                            location: BannerLocation.topStart,
+                            child: WillPopScope(
+                              onWillPop: () async =>
+                                  inspectorController.pageController.page == 0,
+                              child: PageView(
+                                controller: inspectorController.pageController,
+                                physics: const NeverScrollableScrollPhysics(),
+                                children: [
+                                  _child,
+                                  const _Inspector(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : _child,
               );
             },
           )
         : _child;
-
-    if (!hideInspectorBanner && enabled)
-      widget = Directionality(
-        textDirection: TextDirection.ltr,
-        child: InkWell(
-          onTap: () {},
-          child: Banner(
-            message: 'INSPECTOR',
-            textDirection: TextDirection.ltr,
-            location: BannerLocation.topEnd,
-            child: widget,
-          ),
-        ),
-      );
 
     return widget;
   }
