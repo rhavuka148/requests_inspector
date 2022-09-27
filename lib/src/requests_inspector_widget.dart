@@ -15,7 +15,7 @@ class RequestsInspector extends StatelessWidget {
     Key? key,
     this.enabled = false,
     this.hideInspectorBanner = false,
-    this.showInspectorOn = ShowInspectorOn.Shaking,
+    this.showInspectorOn = ShowInspectorOn.None,
     required Widget child,
   })  : _child = child,
         super(key: key);
@@ -60,11 +60,14 @@ class RequestsInspector extends StatelessWidget {
     if (!hideInspectorBanner && enabled)
       widget = Directionality(
         textDirection: TextDirection.ltr,
-        child: Banner(
-          message: 'INSPECTOR',
-          textDirection: TextDirection.ltr,
-          location: BannerLocation.topEnd,
-          child: widget,
+        child: InkWell(
+          onTap: context.read<InspectorController>().showInspector,
+          child: Banner(
+            message: 'INSPECTOR',
+            textDirection: TextDirection.ltr,
+            location: BannerLocation.topEnd,
+            child: widget,
+          ),
         ),
       );
 
